@@ -48,13 +48,51 @@ add x: xs = x + add xs
 
 ## 网络编程 + Socket
 
+<font color='red'>一、发起HTTP请求</font>
+
+- 如何使用 haskell 发起 http 请求（Simple版本）
+
+- 如何使用 haskell 发起 http 请求（带Header版本）
+
+注意使用下列的 cabal 命令来进行安装
+ 
+```bash
+cabal install --lib http-conduit # 不要这么写，会有副作用，与Stack会有问题。
+```
+
+```haskell
+{-# LANGUAGE OverloadedStrings #-}
+import qualified Data.ByteString.Lazy.Char8 as L8
+import           Network.HTTP.Simple
+
+main :: IO ()
+main = do
+    response <- httpLBS "http://www.baidu.com"
+
+    putStrLn $ "The status code was: " ++
+               show (getResponseStatusCode response)
+    print $ getResponseHeader "Content-Type" response
+    L8.putStrLn $ getResponseBody response
+```
+
+<font color='red'>二、进行 TCP 服务的监听并处理事件</font>
+
+如何使用 Haskell 来进行Servering，可以使用如下的代码
+```haskell
+import Network.Simple.TCP
+
+main :: IO ()
+main = do 
+    putStrLn "Start Servering in 10000 port: "
+    serve (Host "127.0.0.1") "10000" $ \(connectionSocket, remoteAddr) -> do
+        {-maybe_msg <- recv connectionSocket -}
+        putStrLn $ "TCP connection established from " ++ show remoteAddr
+```
+
 
 ## UI 编程
 
-
-## Haskell Related
-
-### 自定义类型
+## Haskell 专项训练
 
 `data` 语法是用来构建新的对象，如下代码: 
 
@@ -134,3 +172,4 @@ main = do
    |                       ^^^^^^^
 
 ```
+
